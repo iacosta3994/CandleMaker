@@ -11,7 +11,7 @@ wax = waxClass('soy', 4535.92, 31.95)
 #type,quantity, price $
 wick = wickClass('wood', 100, 13.99)
 #maxVolume fl oz,quantity, price $
-container = candleContainerClass(16, 12, 16.99)
+container = candleContainerClass(8, 24, 36.99)
 #type, weight g, price$
 addon = addonClass('lavender', 453.592,  13.95)
 #grams ,price, wax weight, Dye percentage
@@ -33,6 +33,9 @@ class Candle:
         self.costOfFragranceOil = self.fragrance.oilCalculate()
         self.oilUsed = self.fragrance.oilUsedCalculate()
         self.totalWeight = self.getWeight()
+        self.totalPrice = Candle.getPrice(self)
+        self.containerNeeded = Candle.getContainersNeeded(self)
+
 
     def getPrice(self):
         return (self.wax.price + 
@@ -46,7 +49,10 @@ class Candle:
                 self.addon.weight +
                 self.dyeUsed+
                 self.oilUsed)
+    def getContainersNeeded(self):
+        return self.container.fillContainers(totalWeight = Candle.getWeight(self))
 
+  
     
 
     def printPrice(self):
@@ -54,12 +60,13 @@ class Candle:
             print('Cost of ' + str(self.wick.type) + 'wick is ' + str(self.wick.price))
             print('Cost of container is $' + str(self.container.price))
             print('Cost of addons is $' + str(self.addon.price))
-            print('Cost of dye for ' + str(self.wax.weight) + 'grams of wax is $' + str(self.costOfDye) + " using " + str(self.dyeUsed) +  " grams of dye.")
-            print('Cost of oil for ' + str(self.wax.weight) + 'grams of wax is $' + str(self.costOfFragranceOil) + " using " + str(self.oilUsed) +  " grams of fragrance oil.")
+            print('Cost of dye for ' + str(self.wax.weight) + 'grams of wax is $' + str(round(self.costOfDye,2)) + " using " + str(self.dyeUsed) +  " grams of dye.")
+            print('Cost of oil for ' + str(self.wax.weight) + 'grams of wax is $' + str(round(self.costOfFragranceOil,2)) + " using " + str(self.oilUsed) +  " grams of fragrance oil.")
+            print('Individual cost for one of the '+ str(round(self.containerNeeded, 2)) + ' candle(s) is: $' + str(round(self.totalPrice / self.containerNeeded , 2)))
             
 
     def __str__(self):
-        return '\nCost: $' + str(Candle.getPrice(self)) + '\nTotal Weight in Grams: ' + str(Candle.getWeight(self)) 
+        return '\nCost: $' + str(Candle.getPrice(self)) + '\nTotal Weight in Grams: ' + str(Candle.getWeight(self) ) 
 
 
 lavenderCandle = Candle(wax, wick, container, addon, dye, fragrance)
